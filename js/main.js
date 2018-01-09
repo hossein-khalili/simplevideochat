@@ -145,9 +145,8 @@ function createPeerConnection() {
       iceServers: [     // Information about ICE servers - Use your own!
         {
           urls: "138.197.154.24:3478",  // A TURN server
-          username: "webrtc",
-          credential: "turnserver"
-        }
+          username: "test",
+          password: "test"        }
       ]
   });
     pc.onicecandidate = handleIceCandidate;
