@@ -144,9 +144,9 @@ function createPeerConnection() {
     pc = new RTCPeerConnection({
       iceServers: [     // Information about ICE servers - Use your own!
         {
-          urls: 138.197.154.24:3478,  // A TURN server
+          urls: "turn:138.197.154.24:3478",  // A TURN server
           username: "test",
-          password: "test"        }
+          credential: "test"      }
       ]
   });
     pc.onicecandidate = handleIceCandidate;
