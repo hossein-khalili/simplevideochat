@@ -1,15 +1,12 @@
-
-
-'use strict';
-
-
 navigator.getUserMedia = navigator.getUserMedia || navigator.mozGetUserMedia || navigator.webkitGetUserMedia;
 window.RTCPeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
 window.RTCIceCandidate = window.RTCIceCandidate || window.mozRTCIceCandidate || window.webkitRTCIceCandidate;
 window.RTCSessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
 window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition
   || window.msSpeechRecognition || window.oSpeechRecognition;
-  
+
+'use strict';
+
 var isChannelReady;
 var isInitiator = false;
 var isStarted = false;
@@ -20,7 +17,7 @@ var turnReady;
 var createButton = document.getElementById("createbtn");
 var joinButton = document.getElementById("joinbtn");
 var endButton = document.getElementById("endCallButton");
-
+var myHostname = window.location.hostname;
 // Set up audio and video regardless of what devices are present.
 var sdpConstraints = {'mandatory': {
   'OfferToReceiveAudio':true,
@@ -144,7 +141,15 @@ window.onbeforeunload = function(e){
 
 function createPeerConnection() {
   try {
-    pc = new RTCPeerConnection(null);
+    pc = new RTCPeerConnection({
+      iceServers: [     // Information about ICE servers - Use your own!
+        {
+          urls: "138.197.154.24:3478",  // A TURN server
+          username: "webrtc",
+          credential: "turnserver"
+        }
+      ]
+  });
     pc.onicecandidate = handleIceCandidate;
     pc.onaddstream = handleRemoteStreamAdded;
     pc.onremovestream = handleRemoteStreamRemoved;
