@@ -1,0 +1,115 @@
+body{
+	font-family : sans-serif;
+	margin:0;
+
+}
+
+
+.container {
+	display:flex;
+	height:100vh;
+	#endCallButton{
+		position: fixed;
+		height: 45px;
+		width: 30%;
+		margin:auto;
+		text-align: center;
+		background-color: tomato;
+		color: #fff;
+		margin-left: 50%;
+		bottom: 100px;
+		border:none;
+		z-index: 10;
+		&:disabled{
+			opacity: 0.2;
+		}
+	}
+	.main{
+		background-color: rgba(24, 42, 60,1.0);
+		height: 100vh;
+		width: 70%;
+
+
+		video{
+			&#localVideo{
+				width: 200px;
+				height:200px;
+				position: absolute;
+				clip-path: circle(70px at 100px 100px);
+				-webkit-clip-path: circle(70px at 100px 100px);
+				-moz-clip-path: circle(70px at 100px 100px);
+				-o-clip-path: circle(70px at 100px 100px);
+				z-index: 10;
+			}
+			&#remoteVideo{
+				width: 100%;
+				height:100%;
+				margin-top:0;
+				z-index: 0;
+			}
+		}
+	}
+	.sidebar{
+		width:30%;
+		justify-content: center;
+		
+		background-color: #34495e;
+		color:#fff;
+		#createbtn,#joinbtn{
+			font-size: 18px;
+			margin-top: 20px;
+			cursor: pointer;
+			border:none;
+			padding:10px 16px;
+			&:hover{
+				opacity: 0.9;
+			}
+		}
+		#createbtn{
+					background-color:#f39c12;
+				}
+		#joinbtn{
+					background-color:#2ecc71;
+		}
+		ul.contacts {
+
+			width: 100%;
+			padding: 0;
+			text-align: center;
+			.title{
+
+				padding:10px 10px;
+				font-weight: bold;
+				font-size:3em;
+				color:#f1f1f1;
+			}
+			li.person{
+				&:hover{
+					background-color: rgba(44, 62, 80,1);
+					cursor: pointer;
+				}
+				width: 100%;
+				background-color: rgba(44, 62, 80,0.8);
+				list-style: none;
+				color:#fff;
+				padding:10px 0;
+				margin:10px 0px;
+				.name{
+					font-size:1.2em;
+					margin-right: 2em;
+				}
+				img{
+					width: 45px;
+					height: 45px;
+					vertical-align: middle;
+					margin-right: 15px;
+					border-radius:50%;
+					border:2px solid #e3e3e3;
+				}
+				.fas {
+					margin-left:10px;
+				}
+			}
+		}
+	}
+}

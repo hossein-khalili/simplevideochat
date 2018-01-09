@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="webrtc.js"></script>
+    <title>WebRTC Simple Video-Chat</title>
+    <link rel="stylesheet" type="text/css" href="assets/styles/main.css">
+    <link href="https://use.fontawesome.com/releases/v5.0.1/css/all.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <div class="container">
+        <div class="sidebar">
+        <div style="margin: auto;text-align: center;">
+            <button type="button" onclick="createOrJoin()" id="createbtn">Create Room</button>
+            <button type="button" onclick="createOrJoin()" id="joinbtn">Join Room</button>
+        </div>
+            
+        </div>
+        <input id="endCallButton" onclick="hangup()" type="button" disabled value="END"/>
+        <div class="main">
+
+            <video id="localVideo" autoplay muted></video>
+            <video id="remoteVideo" autoplay></video>
+
+        </div>
+
+    </div>
+<script src='/socket.io/socket.io.js'></script>
+<script src='js/lib/adapter.js'></script>
+<script src='js/main.js'></script>
+
+  </body>
+</html>
