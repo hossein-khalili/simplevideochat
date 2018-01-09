@@ -146,7 +146,7 @@ function createPeerConnection() {
         {
           urls: "turn:138.197.154.24:3478",
           username: "test",  // A TURN server
-          password: "test"      }
+          credential: "test"      }
       ]
   });
     pc.onicecandidate = handleIceCandidate;
