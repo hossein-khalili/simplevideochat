@@ -18,7 +18,6 @@ var sdpConstraints = {'mandatory': {
 
 /////////////////////////////////////////////
 
-var socket = io.connect();
 
 function createOrJoin(){
 	var room = prompt("Enter room name:");
@@ -27,7 +26,7 @@ function createOrJoin(){
 	}
 	console.log("This Peer Request to Join Room: " + room );
 
-	var constraints = {video: true};
+	var constraints = {video: true,audio:true};
 	navigator.getUserMedia(constraints, handleUserMedia, handleUserMediaError);
 	console.log("This Peer Got his Media Stream.");
 
@@ -197,7 +196,6 @@ function handleRemoteStreamRemoved(event) {
 }
 
 function hangup() {
-  console.log('Hanging up.');
   stop();
   sendMessage('bye');
 }
