@@ -144,10 +144,10 @@ function createPeerConnection() {
     pc = new RTCPeerConnection({
       iceServers: [     // Information about ICE servers - Use your own!
         {
-          urls: "stun.stunprotocol.org:3478", //"turn:138.197.154.24:3478",  // A TURN server
+          urls: "stun:stun.stunprotocol.org:3478", //"turn:138.197.154.24:3478",  // A TURN server
           // username: "test",
           // password: "test"      }
-      ]
+      }]
   });
     pc.onicecandidate = handleIceCandidate;
     pc.onaddstream = handleRemoteStreamAdded;
