@@ -144,9 +144,10 @@ function createPeerConnection() {
     pc = new RTCPeerConnection({
       iceServers: [     // Information about ICE servers - Use your own!
         {
-          url: "turn:138.197.154.24:3478",  // A TURN server
-          username: "test",
-          password: "test"      }
+          url: "stun:stun2.l.google.com:19302"//"turn:138.197.154.24:3478",  // A TURN server
+          //username: "test",
+          //password: "test"
+        }
       ]
   });
     pc.onicecandidate = handleIceCandidate;
@@ -167,7 +168,7 @@ function handleIceCandidate(event) {
       type: 'candidate',
       label: event.candidate.sdpMLineIndex,
       id: event.candidate.sdpMid,
-      candidate: event.candidate.candidate});
+      candidate: event.candidate});
   } else {
     console.log('End of candidates.');
   }
