@@ -4,9 +4,16 @@ var file = new(static.Server)();
 var app = http.createServer(function (req, res) {
   file.serve(req, res);
 }).listen(2013);
-
-var s_room;
+var room_owner_map = {};
+var client_to_room_map = {};
 var io = require('socket.io').listen(app);
+
+function remove(array, element) {
+    const index = array.indexOf(element);
+    array.splice(index, 1);
+}
+
+
 io.sockets.on('connection', function (socket){
 
 	function log(){
@@ -20,7 +27,30 @@ io.sockets.on('connection', function (socket){
 	socket.on('message', function (message) {
 		log('Got message: ', message);
     // For a real app, should be room only (not broadcast)
-		socket.broadcast.emit('message', message);
+    	if(message.type == 'close'){
+    		roomName = client_to_room_map[socket.id];
+    		if(roomName){
+    			delete client_to_room_map[socket.id];
+    			for (var i = 0; i < io.sockets.clients(roomName).length; i++) {
+	    			reciver = io.sockets.clients(roomName)[i];
+	    			if(reciver.id != socket.id){
+	    				reciver.emit('message',message);
+	    			}
+    			}
+    			io.sockets.clients(roomName).forEach(function(s){
+    				s.leave(roomName);
+    			});
+    		}
+    		
+    	} else {
+    		roomName = client_to_room_map[socket.id];
+    		for (var i = 0; i < io.sockets.clients(roomName).length; i++) {
+    			reciver = io.sockets.clients(roomName)[i];
+    			if(reciver.id != socket.id){
+    				reciver.emit('message',message);
+    			}
+    		}
+    	}
 	});
 
 	socket.on('creatorjoin', function (room) {
@@ -30,15 +60,33 @@ io.sockets.on('connection', function (socket){
 		log('Request to create or join room', room);
 
 		if (numClients == 0){
-			s_room = room;
 			log("First Peer Requested to Create Room: " + room);
 			socket.join(room);
+			client_to_room_map[socket.id] = room;
+			room_owner_map[room] = socket;
 			socket.emit('created', room);
-		} else if (numClients == 1 && s_room == room) {
+		} else if (numClients == 1) {
 			log("Second Peer Requested to Join Room: " + room);
-			io.sockets.in(room).emit('join', room);
-			socket.join(room);
-			socket.emit('joined', room);
+			admin = room_owner_map[room];
+			admin.emit('join',room);
+			admin.on('accept',function(){
+				console.log("#####################################################");
+				console.log("accepted");
+				console.log("#####################################################");
+				socket.join(room);
+				client_to_room_map[socket.id] = room;
+				socket.emit('joined', room);
+			});
+			admin.on('ignore',function(){
+				log("Request to Join Room is ignored! "); 
+				socket.emit('ignore', room);
+			});
+			// io.sockets.in(room).on('accept',function(){
+			// 	socket.join(room);
+			// 	client_to_room_map[socket.id] = room;
+			// 	socket.emit('joined', room);
+			// })
+			
 		} else { // max two clients or not right room name
 			log("Request to Join Room is ignored! "); 
 			socket.emit('ignore', room);

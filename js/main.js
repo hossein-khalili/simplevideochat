@@ -54,6 +54,12 @@ socket.on('ignore', function (room){
 socket.on('join', function (room){
   console.log('Another peer made a request to join room ' + room);
   console.log('This peer is the initiator of room ' + room + '!');
+  var ret = confirm('User wants to join to your room. do you accept it?');
+  if(ret == true){
+    socket.emit('accept');  
+  }else{
+    socket.emit('ignore');
+  }
   isChannelReady = true;
 	console.log("Channel is Ready!");
 });
@@ -68,6 +74,7 @@ socket.on('log', function (array){
   console.log.apply(console, array);
 });
 
+
 ////////////////////////////////////////////////
 
 function sendMessage(message){
@@ -79,6 +86,7 @@ socket.on('message', function (message){
   console.log('Client received message:', message);
   if (message === 'got user media') {
   	maybeStart();
+    console.log('hey##########################');
   } else if (message.type === 'offer') {
     if (!isInitiator && !isStarted) {
 	console.log("This Peer Got SDP Offer from Other Peer.");
@@ -99,7 +107,10 @@ socket.on('message', function (message){
     });
     pc.addIceCandidate(candidate);
 	console.log("Add ICE Candidate to Peer Connection.");
-	}
+	} else if( message.type == 'close' ){
+    handleRemoteHangup();
+
+  }
 });
 
 ////////////////////////////////////////////////////
@@ -134,8 +145,8 @@ function maybeStart() {
 }
 
 window.onbeforeunload = function(e){
-	sendMessage('bye');
-}
+	sendMessage({'type':'close'});
+};
 
 /////////////////////////////////////////////////////////
 
@@ -211,12 +222,23 @@ function handleRemoteStreamRemoved(event) {
 
 function hangup() {
   console.log('hanging UP!!!!');
+  localVideo.src = "";
+  remoteVideo.src = "";
+  endButton.disabled = true;
+  createButton.disabled = false;
+  joinButton.disabled = false;
   stop();
-  sendMessage('bye');
+  sendMessage({'type':'close'});
 }
 
 function handleRemoteHangup() {
-
+  console.log('hanging UP!!!!');
+  localVideo.src = "";
+  remoteVideo.src = "";
+  endButton.disabled = true;
+  createButton.disabled = false;
+  joinButton.disabled = false;
+  stop();
 }
 
 function stop() {
